@@ -9,12 +9,12 @@ public class UserValidation {
     private static final String zeroTo255
             = "(\\d{1,2}|(0|1)\\"
             + "d{2}|2[0-4]\\d|25[0-5])";
-    private static final String emailRegex
+    private static final String ipRegex
             = zeroTo255 + "\\."
             + zeroTo255 + "\\."
             + zeroTo255 + "\\."
             + zeroTo255;
-    private static final Pattern ipPattern = Pattern.compile(emailRegex);
+    private static final Pattern ipPattern = Pattern.compile(ipRegex);
     private static final String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$";
     private static final Pattern emailPattern = Pattern.compile("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$");
