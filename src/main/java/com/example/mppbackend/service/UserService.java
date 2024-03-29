@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public class UserService {
-    private UserRepository userRepository = new UserRepository();
+    private final UserRepository userRepository = new UserRepository();
 
     public UserDto addUser(UserDto userDto) {
         User user = UserMapper.mapToUser(userDto);
