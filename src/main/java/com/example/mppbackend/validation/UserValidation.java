@@ -20,6 +20,9 @@ public class UserValidation {
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$");
 
     public static void validate(User user) {
+        if (user.getId() < 1) {
+            throw new RuntimeException("Invalid id");
+        }
         if (user.getUsername().length() < 3) {
             throw new RuntimeException("Username must be at least 3 characters long");
         }
