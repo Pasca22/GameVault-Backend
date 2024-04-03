@@ -64,4 +64,9 @@ public class UserRepository implements Repository<User, Integer> {
     public List<User> getAll() {
         return users;
     }
+
+    @Override
+    public Integer getNextId() {
+        return users.stream().map(User::getId).max(Integer::compareTo).orElse(0) + 1;
+    }
 }

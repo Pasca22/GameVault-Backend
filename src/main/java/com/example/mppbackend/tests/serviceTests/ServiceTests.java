@@ -22,17 +22,10 @@ public class ServiceTests {
 
     private static void testAddUser() {
         userService = new UserService();
-        UserDto userDtoInvalidId = new UserDto(1, "John", "Doe", "asd", "asd", "asd");
         UserDto userDtoInvalidPassword = new UserDto(7, "John", "Doe", "asd", "asd", "asd");
         UserDto userDtoInvalidEmail = new UserDto(7, "John", "DoeADSae321", "asd", "asd", "asd");
         UserDto userDtoInvalidIp = new UserDto(7, "John", "DoeADSae321", "asd@as.com", "asd", "asd");
         UserDto userDtoValid = new UserDto(7, "John", "DoeADSae321", "asd@as.com", "avatar", "1.1.1.1");
-
-        try {
-            userService.addUser(userDtoInvalidId);
-        } catch (Exception e) {
-            assert e.getMessage().equals("User with id " + userDtoInvalidId.getId() + " already exists");
-        }
 
         try {
             userService.addUser(userDtoInvalidPassword);
@@ -54,6 +47,8 @@ public class ServiceTests {
         }
 
         userService.addUser(userDtoValid);
+        List<UserDto> users = userService.getAllUsers();
+        assert users.size() == 7;
     }
 
     private static void testGetUserById() {

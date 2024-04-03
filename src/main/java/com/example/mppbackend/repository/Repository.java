@@ -16,4 +16,6 @@ public interface Repository<EntityType, IdType> {
     int count();
 
     List<EntityType> getAll();
+
+    Integer getNextId();
 }

@@ -14,14 +14,10 @@ public class UserService {
     private final UserRepository userRepository = new UserRepository();
 
     public UserDto addUser(UserDto userDto) {
-        User user = UserMapper.mapToUser(userDto);
-        if (userRepository.existsById(user.getId())) {
-            throw new RuntimeException("User with id " + user.getId() + " already exists");
-        }
+        User user = new User(userRepository.getNextId(), userDto.getUsername(), userDto.getPassword(), userDto.getEmail(), userDto.getAvatar(), userDto.getIp());
         UserValidation.validate(user);
-
         userRepository.add(user);
-        return userDto;
+        return UserMapper.mapToUserDto(user);
     }
 
     public UserDto getUserById(Integer id) {
@@ -42,6 +38,7 @@ public class UserService {
             throw new RuntimeException("User with id " + id + " not found");
         }
         User updatedUser = UserMapper.mapToUser(userDto);
+        updatedUser.setId(id);
 
         UserValidation.validate(updatedUser);
 
