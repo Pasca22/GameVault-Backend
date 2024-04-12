@@ -1,11 +1,11 @@
 package com.example.mppbackend.repository;
 
 import com.example.mppbackend.entity.User;
+import com.github.javafaker.Faker;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import com.github.javafaker.Faker;
 
 
 public class UserRepository implements Repository<User, Integer> {
@@ -16,7 +16,7 @@ public class UserRepository implements Repository<User, Integer> {
         Faker faker = new Faker();
         for (int i = 1; i < 7; i++) {
             String username = faker.name().username();
-            String password = faker.internet().password();
+            String password = faker.internet().password(8, 15, true);
             String emailAddress = faker.internet().emailAddress();
             String avatar = faker.internet().avatar();
             String ip = faker.internet().ipV4Address();
