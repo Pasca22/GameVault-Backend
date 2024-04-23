@@ -1,12 +1,14 @@
 package com.example.mppbackend.service;
 
 import com.example.mppbackend.entity.GameOrder;
+import com.example.mppbackend.entity.TableEntity;
 import com.example.mppbackend.repository.GameOrderRepository;
 import com.example.mppbackend.repository.UserRepository;
 import com.example.mppbackend.validation.GameOrderValidation;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -58,5 +60,23 @@ public class GameOrderService {
             throw new RuntimeException("Game order with id " + id + " not found");
         }
         gameOrderRepository.deleteById(id);
+    }
+
+    public List<TableEntity> getAllGameOrdersForTable(int currentPage) {
+        int pageSize = 10;
+        int firstIndex = (currentPage - 1) * pageSize;
+        int lastIndex = firstIndex + pageSize;
+        List<GameOrder> gameOrders = gameOrderRepository.findAll().subList(firstIndex, lastIndex);
+        List<TableEntity> tableEntities = new ArrayList<>();
+        for (GameOrder gameOrder : gameOrders) {
+            TableEntity tableEntity = new TableEntity();
+            tableEntity.setGameOrderId(gameOrder.getId());
+            tableEntity.setGameName(gameOrder.getName());
+            tableEntity.setDescription(gameOrder.getDescription());
+            tableEntity.setUserId(gameOrder.getUser().getId());
+            tableEntity.setUsername(gameOrder.getUser().getUsername());
+            tableEntities.add(tableEntity);
+        }
+        return tableEntities;
     }
 }

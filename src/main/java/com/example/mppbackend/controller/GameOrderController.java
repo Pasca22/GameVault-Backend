@@ -1,6 +1,7 @@
 package com.example.mppbackend.controller;
 
 import com.example.mppbackend.entity.GameOrder;
+import com.example.mppbackend.entity.TableEntity;
 import com.example.mppbackend.service.GameOrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -45,5 +46,11 @@ public class GameOrderController {
     public ResponseEntity<String> deleteGameOrder(@PathVariable Long id) {
         gameOrderService.deleteGameOrder(id);
         return ResponseEntity.ok("Game order with id " + id + " deleted successfully");
+    }
+
+    @GetMapping("/table/{page}")
+    public ResponseEntity<List<TableEntity>> getGameOrdersByTable(@PathVariable int page) {
+        List<TableEntity> tableEntities = gameOrderService.getAllGameOrdersForTable(page);
+        return ResponseEntity.ok(tableEntities);
     }
 }
