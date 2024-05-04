@@ -6,6 +6,8 @@ import com.example.mppbackend.repository.GameOrderRepository;
 import com.example.mppbackend.repository.UserRepository;
 import com.example.mppbackend.validation.GameOrderValidation;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -64,9 +66,8 @@ public class GameOrderService {
 
     public List<TableEntity> getAllGameOrdersForTable(int currentPage) {
         int pageSize = 10;
-        int firstIndex = (currentPage - 1) * pageSize;
-        int lastIndex = firstIndex + pageSize;
-        List<GameOrder> gameOrders = gameOrderRepository.findAll().subList(firstIndex, lastIndex);
+        Page<GameOrder> page = gameOrderRepository.findAll(PageRequest.of(currentPage - 1, pageSize));
+        List<GameOrder> gameOrders = page.getContent();
         List<TableEntity> tableEntities = new ArrayList<>();
         for (GameOrder gameOrder : gameOrders) {
             TableEntity tableEntity = new TableEntity();
