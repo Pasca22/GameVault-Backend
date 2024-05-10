@@ -81,4 +81,13 @@ public class UserService {
         updatedGameOrder.setDescription(gameOrder.getDescription());
         return gameOrderRepository.save(updatedGameOrder);
     }
+
+    public GameOrder addGameOrderByAdmin(String username, GameOrder gameOrder) {
+        if (userRepository.findByUsername(username).isEmpty()) {
+            throw new RuntimeException("User with username " + username + " not found");
+        }
+        User user = userRepository.findByUsername(username).get();
+        gameOrder.setUser(user);
+        return gameOrderRepository.save(gameOrder);
+    }
 }

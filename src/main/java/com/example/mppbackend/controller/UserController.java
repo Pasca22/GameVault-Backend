@@ -66,15 +66,21 @@ public class UserController {
         return userService.addGameOrder(userId, gameOrder);
     }
 
-    @DeleteMapping("/mod/delete_game_order/{id}")
-    @PreAuthorize("hasRole('MODERATOR')")
+    @PostMapping("/admin/add_game_order/{username}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public GameOrder addGameOrderByAdmin(@PathVariable String username, @RequestBody GameOrder gameOrder) {
+        return userService.addGameOrderByAdmin(username, gameOrder);
+    }
+
+    @DeleteMapping("/delete_game_order/{id}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public String deleteGameOrder(@PathVariable Long id) {
         userService.deleteGameOrder(id);
         return "Game order with id " + id + " deleted successfully";
     }
 
-    @PutMapping("/mod/update_game_order/{id}")
-    @PreAuthorize("hasRole('MODERATOR')")
+    @PutMapping("/update_game_order/{id}")
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     public GameOrder updateGameOrder(@PathVariable Long id, @RequestBody GameOrder gameOrder) {
         return userService.updateGameOrder(id, gameOrder);
     }
