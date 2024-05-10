@@ -1,18 +1,19 @@
-package com.example.mppbackend.entity;
+package com.example.mppbackend.payload.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class TableEntity {
-    private Long gameOrderId;
-    private String gameName;
-    private String description;
-    private Long userId;
+public class SignupRequest {
     private String username;
+    private String email;
+    private String password;
+    private Set<String> role;
 }

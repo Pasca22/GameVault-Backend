@@ -1,49 +1,81 @@
 package com.example.mppbackend.controller;
 
+import com.example.mppbackend.dto.UserDto;
+import com.example.mppbackend.entity.GameOrder;
 import com.example.mppbackend.entity.User;
 import com.example.mppbackend.service.UserService;
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin("*")
-@AllArgsConstructor
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/data")
 public class UserController {
 
+    @Autowired
     private UserService userService;
 
-    @PostMapping
-    public ResponseEntity<User> addUser(@RequestBody User user) {
-        User addedUser = userService.addUser(user);
-        return new ResponseEntity<>(addedUser, HttpStatus.CREATED);
+    @GetMapping("/all")
+    public String allAccess() {
+        return "Public Content.";
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
-        return ResponseEntity.ok(user);
+    @GetMapping("/game_orders/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
+    public List<GameOrder> getGameOrders(@PathVariable Long id) {
+        return userService.getGameOrders(id);
     }
 
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+    @GetMapping("/mod")
+    @PreAuthorize("hasRole('MODERATOR')")
+    public String moderatorAccess() {
+        return "Moderator Board.";
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-        User updatedUser = userService.updateUser(id, user);
-        return ResponseEntity.ok(updatedUser);
+    @GetMapping("/admin/users")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserDto> getAllUsers() {
+        return userService.getAllUsers();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+    @GetMapping("/admin/game_orders")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<GameOrder> getAllGameOrders() {
+        return userService.getAllGameOrders();
+    }
+
+    @DeleteMapping("/admin/delete_user/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok("User with id " + id + " deleted successfully");
+        return "User with id " + id + " deleted successfully";
+    }
+
+    @PutMapping("/admin/update_user/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserDto updateUser(@PathVariable Long id, @RequestBody User user) {
+        return userService.updateUser(id, user);
+    }
+
+    @PostMapping("/mod/add_game_order/{userId}")
+    @PreAuthorize("hasRole('MODERATOR')")
+    public GameOrder addGameOrder(@PathVariable Long userId, @RequestBody GameOrder gameOrder) {
+        return userService.addGameOrder(userId, gameOrder);
+    }
+
+    @DeleteMapping("/mod/delete_game_order/{id}")
+    @PreAuthorize("hasRole('MODERATOR')")
+    public String deleteGameOrder(@PathVariable Long id) {
+        userService.deleteGameOrder(id);
+        return "Game order with id " + id + " deleted successfully";
+    }
+
+    @PutMapping("/mod/update_game_order/{id}")
+    @PreAuthorize("hasRole('MODERATOR')")
+    public GameOrder updateGameOrder(@PathVariable Long id, @RequestBody GameOrder gameOrder) {
+        return userService.updateGameOrder(id, gameOrder);
     }
 }
